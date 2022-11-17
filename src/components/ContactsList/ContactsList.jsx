@@ -1,20 +1,20 @@
 import { List, Item, Text, Link, Btn } from './ContactsList.styled';
 import { ReactComponent as DelIcon } from '../icons/delete.svg';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteContact } from '../../redux/contactsSlice';
-import { getFilteredContacts } from 'redux/selectors';
+import { selectFilteredContacts } from 'redux/selectors';
+import { deleteContact } from 'redux/operations';
 
 export const ContactsList = () => {
-  const contacts = useSelector(getFilteredContacts);
+  const contacts = useSelector(selectFilteredContacts);
   const dispatch = useDispatch();
 
   return (
     <List component="ul">
-      {contacts.map(({ id, name, number }) => {
+      {contacts.map(({ id, name, phone }) => {
         return (
           <Item key={id}>
             <Text component="ul">
-              {name}: <Link href={`tel:${number}`}>{number}</Link>
+              {name}: <Link href={`tel:${phone}`}>{phone}</Link>
             </Text>
             <Btn
               onClick={() => {

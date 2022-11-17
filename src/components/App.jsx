@@ -1,13 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box } from './Box/Box';
 import { ContactsList } from './ContactsList/ContactsList';
 import { ContactForm } from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
-import { getFilteredContacts } from 'redux/selectors';
-import { useSelector } from 'react-redux';
+import {
+  selectContacts,
+  selectFilteredContacts,
+  selectIsLoading,
+} from 'redux/selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchContacts } from 'redux/operations';
+import { Loader } from './Loader/Loader';
 
 export const App = () => {
-  const contacts = useSelector(getFilteredContacts);
+  const filteredContacts = useSelector(selectFilteredContacts);
+  const contacts = useSelector(selectContacts);
+  const isLoading = useSelector(selectIsLoading);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <Box
@@ -21,16 +34,16 @@ export const App = () => {
     >
       <h1>Phonebook</h1>
       <ContactForm />
-
       {contacts.length > 0 ? (
         <>
           <h2>Contacts</h2>
           <Filter />
-          <ContactsList />
+          {filteredContacts.length > 0 ? <ContactsList /> : ''}
         </>
       ) : (
         ''
       )}
+      {isLoading && <Loader />}
     </Box>
   );
 };
